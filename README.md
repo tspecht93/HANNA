@@ -40,7 +40,7 @@ To set up the project, follow these steps:
 
 ## Usage
 
-You can use the `HANNA.ipynb` notebook, which provides a demonstration of how calculate activity coefficients for a binary mixture.
+You can use the `HANNA.ipynb` notebook, which provides a demonstration of how to calculate activity coefficients for a binary mixture.
 
 ## Contents
 
