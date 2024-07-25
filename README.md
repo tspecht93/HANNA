@@ -1,7 +1,8 @@
 
 # HANNA Project
 
-This repository contains the implementation of our **HA**rd-constraint **N**eural **N**etwork for **A**ctivity coefficient prediction (HANNA). HANNA can be used to predict binary activity coefficients for any mixture where the SMILES of the two components are provided. You can find details on HANNA in our paper:
+This repository contains the implementation of our **HA**rd-constraint **N**eural **N**etwork for **A**ctivity coefficient prediction (HANNA). HANNA can be used to predict activity coefficients in any binary mixture whose components can be represented as SMILES strings. You can find details on HANNA in our paper:
+(https://github.com/yourusername/HANNA.git)
 
 ## Installation
 
@@ -39,7 +40,7 @@ To set up the project, follow these steps:
 
 ## Usage
 
-You can use the `HANNA.ipynb` notebook, which provides a demonstration of how calculate activity coefficients for a binary mixture.
+You can use the `HANNA.ipynb` notebook, which provides a demonstration of how to calculate activity coefficients for a binary mixture.
 
 ## Contents
 
