@@ -2,6 +2,11 @@ import torch
 from transformers import AutoModel, AutoTokenizer
 import numpy as np
 from rdkit import Chem
+from tokenizers import Tokenizer
+from tokenizers.pre_tokenizers import Split
+from tokenizers import Regex
+from tokenizers.models import WordLevel
+import os
       
 def predict(embedding_matrix, scaler, model, device): # Function to predict ln_gamma values
     # Transform input into the correct shape
@@ -19,7 +24,7 @@ def predict(embedding_matrix, scaler, model, device): # Function to predict ln_g
     return x_pred_tensor.detach().numpy(), ln_gammas_pred.detach().numpy()
     
 
-def preprocess_input( embedding_matrix, Embedding_BERT=384, num_components=2):
+def preprocess_input(embedding_matrix, Embedding_BERT=384, num_components=2):
     # Embedding_matrix is organized as follows: [T, x1, emb1, emb2]
     # Shape of Embedding_matrix should be [num_samples, 770=2*384 + 2] in default case
     # num_samples = 200 in the default case
@@ -69,35 +74,81 @@ def canonicalize_smiles(smiles):
     smiles = Chem.MolToSmiles(Chem.MolFromSmiles(smiles))
     return smiles
 
-def get_smiles_embedding(smiles, model_version='DeepChem/ChemBERTa-77M-MTR', max_length=128):
-    model = AutoModel.from_pretrained(pretrained_model_name_or_path=model_version, output_attentions=True) # Load ChemBERT model
-    tokenizer = AutoTokenizer.from_pretrained(pretrained_model_name_or_path=model_version) # Load ChemBERT tokenizer
-    # Build tokenizer with same padding as in training
-    tokens = tokenizer(
-                smiles,
-                max_length=max_length,
-                padding="max_length",
-                truncation=True,
-                return_tensors="pt"
-            )
 
-    # Get the embeddings from CLS token
-    with torch.no_grad():
-        emb = model(
-            tokens["input_ids"],
-            tokens["attention_mask"]
-        )["last_hidden_state"][:, 0, :].numpy()
+
+def initiliaze_ChemBERTA(model_name="DeepChem/ChemBERTa-77M-MTR", device=None):
+    # Load the tokenizer from the pre-trained model
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
     
+    # Create the directory if it doesn't exist
+    os.makedirs('ChemBERTa', exist_ok=True)
+    
+    # Save the tokenizer's vocabulary to the specified folder
+    tokenizer.save_vocabulary('ChemBERTa/')
+    
+    # Define ChemBERTa model and move it to the specified device
+    ChemBERTA = AutoModel.from_pretrained(pretrained_model_name_or_path=model_name).to(device)
+    
+    # Load custom tokenizer using the saved vocab.json
+    custom_tokenizer = Tokenizer(
+        WordLevel.from_file(
+            'ChemBERTa/vocab.json',  # Path to your custom vocabulary file
+            unk_token='[UNK]'
+        )
+    )
+
+    # Set the pre-tokenizer to split SMILES characters (including handling Br, Cl, etc.)
+    pre_tokenizer = Split(
+        pattern=Regex(r"\[(.*?)\]|Br|Cl|."),
+        behavior='isolated'
+    )
+    custom_tokenizer.pre_tokenizer = pre_tokenizer
+    return ChemBERTA, custom_tokenizer
+
+def get_smiles_embedding(smiles, custom_tokenizer, ChemBERTA, device, max_length=512):
+    # Tokenize the SMILES using your custom tokenizer
+    custom_encoded = custom_tokenizer.encode(smiles)
+
+    # Add [CLS] and [SEP] tokens
+    CLS_token_id = 12  # Assuming 12 is the token ID for [CLS]
+    SEP_token_id = 13  # Assuming 13 is the token ID for [SEP]
+    PAD_token_id = 0   # Assuming 0 is the token ID for [PAD]
+
+    # Create input_ids with [CLS] at the start and [SEP] at the end
+    input_ids = [CLS_token_id] + custom_encoded.ids + [SEP_token_id]
+
+    # Apply truncation if input_ids are longer than max_length
+    if len(input_ids) > max_length:
+        input_ids = input_ids[:max_length - 1] + [SEP_token_id]  # Ensure the sequence ends with [SEP]
+
+    # Apply padding if input_ids are shorter than max_length
+    if len(input_ids) < max_length:
+        padding_length = max_length - len(input_ids)
+        input_ids = input_ids + [PAD_token_id] * padding_length
+
+    # Convert the input_ids to PyTorch tensor format
+    input_ids_tensor = torch.tensor([input_ids]).to(device)
+
+    # Prepare attention mask (1 for real tokens, 0 for padding)
+    attention_mask = (input_ids_tensor != PAD_token_id).long()
+
+    with torch.no_grad():
+        # Get embeddings from ChemBERTA
+        emb = ChemBERTA(
+            input_ids=input_ids_tensor,
+            attention_mask=attention_mask
+        )["last_hidden_state"][:, 0, :].numpy()# Take [CLS] token embedding
     return emb
 
-def create_embedding_matrix(smiles1, smiles2, T, x1_values=None):
+def create_embedding_matrix(smiles1, smiles2, T, device, x1_values=None):
     # Canonicalize the SMILES
     smiles1 = canonicalize_smiles(smiles1)
     smiles2 = canonicalize_smiles(smiles2)
-    
+    # Initialize ChemBERT model and tokenizer
+    ChemBERTA, custom_tokenizer = initiliaze_ChemBERTA(device=device)
     # Get embeddings for both SMILES
-    emb1 = get_smiles_embedding(smiles1).flatten()
-    emb2 = get_smiles_embedding(smiles2).flatten()
+    emb1 = get_smiles_embedding(smiles1,custom_tokenizer=custom_tokenizer,ChemBERTA=ChemBERTA,device=device).flatten()
+    emb2 = get_smiles_embedding(smiles2,custom_tokenizer=custom_tokenizer,ChemBERTA=ChemBERTA,device=device).flatten()
     
     # If x1_values is not provided, create a default range from 0 to 1 in 100 steps
     if x1_values is None:

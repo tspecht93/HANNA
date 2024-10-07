@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
+import pandas as pd
+import os
 # Generell Plot settings
 Custom_Blue = (0/255, 95/255, 140/255)  # Converted to [0, 1] range
 Custom_Red = (185/255, 40/255, 25/255) # Converted to [0, 1] range
@@ -30,6 +32,11 @@ def plot_ln_gamma(x_pred, ln_gammas_pred, temp_real, smiles_1, smiles_2):
     - smiles_1: SMILES string of component 1 for the plot title.
     - smiles_2: SMILES string of component 2 for the plot title.
     """
+
+    # Create the output directory if it doesn't exist
+    output_folder = "Output"
+    os.makedirs(output_folder, exist_ok=True)
+
     
     plt.figure(figsize=(6, 6))
     
@@ -61,4 +68,23 @@ def plot_ln_gamma(x_pred, ln_gammas_pred, temp_real, smiles_1, smiles_2):
     plt.figtext(0.5, 0.90, f'SMILES 2: {smiles_2}', ha='center', fontsize=16)
     
     plt.tight_layout(rect=[0, 0, 1, 0.9])  # Adjust layout to accommodate SMILES strings
+
+    # Save the plot as a PNG file in the Output folder
+    filename_plot = os.path.join(output_folder, f"System_{smiles_1}_AND_{smiles_2}_AT_{formatted_temp}K.png")
+    plt.savefig(filename_plot, dpi=300)
     plt.show()
+
+    # Save data to a CSV file in the Output folder
+    data = {
+        'SMILES1': [smiles_1] * len(x_pred),
+        'SMILES2': [smiles_2] * len(x_pred),
+        'T / K': [temp_real] * len(x_pred),
+        'x_1 / mol/mol': x_pred[:, 0],
+        'ln_gamma_1': ln_gammas_pred[:, 0],
+        'ln_gamma_2': ln_gammas_pred[:, 1]
+    }
+    df = pd.DataFrame(data)
+    filename_csv = os.path.join(output_folder, f"System_{smiles_1}_{smiles_2}_{formatted_temp}K.csv")
+    df.to_csv(filename_csv, index=False)
+
+    return filename_plot, filename_csv

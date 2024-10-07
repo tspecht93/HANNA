@@ -53,7 +53,7 @@ You can use the `HANNA.ipynb` notebook, which provides a demonstration of how to
 - `__init__.py`: Initialization file for the package.
 - `HANNA.py`: Contains the neural network architecture of HANNA.
 - `Own_Scaler.py`: Custom scaler implementation for preprocessing.
-- `Plots.py`: Function for creating the plot.
+- `Plots.py`: Function for creating and exporting the plot. Raw values will be saved as csv.
 - `Utils.py`: Utility functions used throughout the project.
 - `HANNA.ipynb`: Jupyter notebook demonstrating the usage of HANNA.
 - `HANNA.yml`: Conda environment configuration file for Windows users.
