@@ -3,3 +3,5 @@
 *.csv
 *.png
 *.json
+# Exception: do not ignore this specific PNG file
+!TOC.png
