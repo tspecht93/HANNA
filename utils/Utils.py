@@ -140,12 +140,10 @@ def get_smiles_embedding(smiles, custom_tokenizer, ChemBERTA, device, max_length
         )["last_hidden_state"][:, 0, :].numpy()# Take [CLS] token embedding
     return emb
 
-def create_embedding_matrix(smiles1, smiles2, T, device, x1_values=None):
+def create_embedding_matrix(smiles1, smiles2, T, device, ChemBERTA, custom_tokenizer, x1_values=None):
     # Canonicalize the SMILES
     smiles1 = canonicalize_smiles(smiles1)
     smiles2 = canonicalize_smiles(smiles2)
-    # Initialize ChemBERT model and tokenizer
-    ChemBERTA, custom_tokenizer = initiliaze_ChemBERTA(device=device)
     # Get embeddings for both SMILES
     emb1 = get_smiles_embedding(smiles1,custom_tokenizer=custom_tokenizer,ChemBERTA=ChemBERTA,device=device).flatten()
     emb2 = get_smiles_embedding(smiles2,custom_tokenizer=custom_tokenizer,ChemBERTA=ChemBERTA,device=device).flatten()
