@@ -1,12 +1,12 @@
 
 # HANNA Project
-[![arXiv](https://img.shields.io/badge/arXiv-2407.18011-b31b1b)](https://arxiv.org/abs/2407.18011)
+[![Paper](https://img.shields.io/badge/Paper-Available-brightgreen)](https://pubs.rsc.org/en/Content/ArticleLanding/2024/SC/D4SC05115G)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/gist/tspecht93/0175be57151b77acdfd8d81022532fe7/hanna.ipynb)
 
 ![](TOC.png)
 
-This repository contains the implementation of our **HA**rd-constraint **N**eural **N**etwork for **A**ctivity coefficient prediction (HANNA). HANNA can be used to predict activity coefficients in any binary mixture whose components can be represented as SMILES strings. You can find details on HANNA in our paper: https://arxiv.org/abs/2407.18011
+This repository contains the implementation of our **HA**rd-constraint **N**eural **N**etwork for **A**ctivity coefficient prediction (HANNA). HANNA can be used to predict activity coefficients in any binary mixture whose components can be represented as SMILES strings. You can find details on HANNA in our [paper](https://pubs.rsc.org/en/Content/ArticleLanding/2024/SC/D4SC05115G).
 
 ## Demonstration in Google Colab
 
