@@ -3,8 +3,7 @@
 [![Paper](https://img.shields.io/badge/Paper-Available-brightgreen)](https://pubs.rsc.org/en/Content/ArticleLanding/2024/SC/D4SC05115G)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/gist/tspecht93/0175be57151b77acdfd8d81022532fe7/hanna.ipynb)
-[![MLPROP](https://img.shields.io/badge/-MLPROP-darkred?logo=https://ml-prop.mv.rptu.de/img/Logo.png)](https://ml-prop.mv.rptu.de/)
-
+[![Website MLPROP](https://img.shields.io/badge/Website-MLPROP-darkred?logo=https://ml-prop.mv.rptu.de/img/Logo.png&labelColor=4f4f4f)](https://ml-prop.mv.rptu.de/)
 
 
 
@@ -18,7 +17,8 @@ This repository contains the implementation of our **HA**rd-constraint **N**eura
 
 ## MLPROP Website
 You can explore HANNA and other models interactively on our new website, [MLPROP](https://ml-prop.mv.rptu.de/), without any installation.
-![](TOC_figure_with_white_background.png)
+[![TOC Figure](TOC_figure_with_white_background.png)](https://ml-prop.mv.rptu.de/)
+
 
 ## Demonstration in Google Colab
 
