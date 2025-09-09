@@ -2,14 +2,15 @@
 # HANNA Project
 [![Paper](https://img.shields.io/badge/Paper-Available-brightgreen)](https://pubs.rsc.org/en/Content/ArticleLanding/2024/SC/D4SC05115G)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
-[![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/gist/tspecht93/0175be57151b77acdfd8d81022532fe7/hanna.ipynb)
 [![Website MLPROP](https://img.shields.io/badge/Website-MLPROP-darkred?logo=https://ml-prop.mv.rptu.de/img/Logo.png&labelColor=4f4f4f)](https://ml-prop.mv.rptu.de/)
 
 
+<h2><a href="https://github.com/marco-hoffmann/HANNA" style="color:red;">NEW HANNA MODEL AVAILABLE</a></h2>
+
+This repository contains the first version of HANNA that was restricted to binary mixtures. We now provide an enhanced version of HANNA that is applicable to multi-component mixtures. You can find it in our new <a href="https://github.com/marco-hoffmann/HANNA">repo</a>.
 
 
-
-
+## Overview
 
 ![](TOC.png)
 
@@ -18,11 +19,6 @@ This repository contains the implementation of our **HA**rd-constraint **N**eura
 ## MLPROP Website
 You can explore HANNA and other models interactively on our new website, [MLPROP](https://ml-prop.mv.rptu.de/), without any installation.
 [![TOC Figure](TOC_figure_with_white_background.png)](https://ml-prop.mv.rptu.de/)
-
-
-## Demonstration in Google Colab
-
-If you do not want to install the required packages right now, you can directly try HANNA out in [Colab](https://colab.research.google.com/gist/tspecht93/0175be57151b77acdfd8d81022532fe7/hanna.ipynb).
 
 ## Installation
 
